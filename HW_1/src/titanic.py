@@ -341,8 +341,26 @@ def main():
     ### ========== TODO : START ========== ###
     # part d: evaluate training error of k-Nearest Neighbors classifier
     # use k = 3, 5, 7 for n_neighbors
-    print('Classifying using k-Nearest Neighbors...')
+    print('Classifying using 3 k-Nearest Neighbors...')
+    clfKNN3 = KNeighborsClassifier(n_neighbors=3)
+    clfKNN3.fit(X, y)
+    y_predKNN3 = clfKNN3.predict(X)        # take the classifier and run it on the training data
+    train_errorKNN3 = 1 - metrics.accuracy_score(y, y_predKNN3, normalize=True)
+    print('\t-- training error: %.3f' % train_errorKNN3)
 
+    print('Classifying using 5 k-Nearest Neighbors...')
+    clfKNN5 = KNeighborsClassifier(n_neighbors=5)
+    clfKNN5.fit(X, y)
+    y_predKNN5 = clfKNN5.predict(X)        # take the classifier and run it on the training data
+    train_errorKNN5 = 1 - metrics.accuracy_score(y, y_predKNN5, normalize=True)
+    print('\t-- training error: %.3f' % train_errorKNN5)
+
+    print('Classifying using 7 k-Nearest Neighbors...')
+    clfKNN7 = KNeighborsClassifier(n_neighbors=7)
+    clfKNN7.fit(X, y)
+    y_predKNN7 = clfKNN7.predict(X)        # take the classifier and run it on the training data
+    train_errorKNN7 = 1 - metrics.accuracy_score(y, y_predKNN7, normalize=True)
+    print('\t-- training error: %.3f' % train_errorKNN7)
     ### ========== TODO : END ========== ###
 
 
