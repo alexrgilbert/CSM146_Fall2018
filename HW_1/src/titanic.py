@@ -225,6 +225,7 @@ def plot_histogram(X, y, Xname, yname, show = True) :
     return data, bins, align, labels
 
 
+
 def error(clf, X, y, ntrials=100, test_size=0.2) :
     """
     Computes the classifier error over a random split of the data,
@@ -247,8 +248,17 @@ def error(clf, X, y, ntrials=100, test_size=0.2) :
     # compute cross-validation error over ntrials
     # hint: use train_test_split (be careful of the parameters)
 
-    train_error = 0
-    test_error = 0
+    avg_trainError = 0; avg_testError = 0;
+    for trial in range(ntrials):
+
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=trial)
+
+        clf.fit(X_train, y_train)
+        y_pred_train = clf.predict(X_train)
+        avg_trainError = avg_trainError + ((1 - metrics.accuracy_score(y_train, y_pred_train, normalize=True))/ntrials)
+        y_pred_test = clf.predict(X_test)
+        avg_testError = avg_testError + ((1 - metrics.accuracy_score(y_test, y_pred_test, normalize=True))/ntrials)
+    return(avg_trainError,avg_testError)
 
     ### ========== TODO : END ========== ###
 
@@ -368,6 +378,22 @@ def main():
     ### ========== TODO : START ========== ###
     # part e: use cross-validation to compute average training and test error of classifiers
     print('Investigating various classifiers...')
+
+    clfMV_TTSplit = MajorityVoteClassifier()
+    (avg_trainError_MV,avg_testError_MV) = error(clfMV_TTSplit, X, y, ntrials=100, test_size=0.2)
+    print('MajorityVote: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_MV, avg_testError_MV))
+
+    clfRand_TTSplit = RandomClassifier()
+    (avg_trainError_Rand,avg_testError_Rand) = error(clfRand_TTSplit, X, y, ntrials=100, test_size=0.2)
+    print('Random: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_Rand, avg_testError_Rand))
+
+    clfDT_TTSplit = DecisionTreeClassifier(criterion='entropy')
+    (avg_trainError_DT,avg_testError_DT) = error(clfDT_TTSplit, X, y, ntrials=100, test_size=0.2)
+    print('DecisionTree: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_DT, avg_testError_DT))
+
+    clfKNN5_TTSplit = KNeighborsClassifier(n_neighbors=5)
+    (avg_trainError_KNN5,avg_testError_KNN5) = error(clfKNN5_TTSplit, X, y, ntrials=100, test_size=0.2)
+    print('K-Nearest: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_KNN5, avg_testError_KNN5))
 
     ### ========== TODO : END ========== ###
 
