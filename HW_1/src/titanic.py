@@ -402,7 +402,20 @@ def main():
     ### ========== TODO : START ========== ###
     # part f: use 10-fold cross-validation to find the best value of k for k-Nearest Neighbors classifier
     print('Finding the best k for KNeighbors classifier...')
-
+    nfold = 100
+    max_k = 50
+    k_tests = []
+    avg_scores = []
+    for k in range(1,50,2):
+        clfKNNk = KNeighborsClassifier(n_neighbors=k)
+        k_tests.append(k)
+        avg_scores.append(1-(np.sum(cross_val_score(clfKNNk,X,y,scoring='accuracy',cv=nfold))/nfold))
+    fig = plt.figure(figsize=(20,15))
+    plt.bar(k_tests,avg_scores,tick_label=k_tests, Label="KNN Validation Error vs K"))
+    plt.xlabel("# of Nearest Neighbors")
+    plt.ylabel("Validation Error") #plt.legend(loc='upper left')
+    plt.legend()
+    plt.show()
     ### ========== TODO : END ========== ###
 
 
@@ -410,7 +423,7 @@ def main():
     ### ========== TODO : START ========== ###
     # part g: investigate decision tree classifier with various depths
     print('Investigating depths...')
-
+    
     ### ========== TODO : END ========== ###
 
 
