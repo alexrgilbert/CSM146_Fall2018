@@ -423,7 +423,21 @@ def main():
     ### ========== TODO : START ========== ###
     # part g: investigate decision tree classifier with various depths
     print('Investigating depths...')
-    
+
+    nfold = 100
+    max_depth = 20
+    depth_tests = []
+    avg_scores = []
+    for d in range(1,(max_depth+1)):
+        clfDTd = DecisionTreeClassifier(criterion='entropy',max_depth=d)
+        depth_tests.append(d)
+        avg_scores.append(1-(np.sum(cross_val_score(clfDTd,X,y,scoring='accuracy',cv=nfold))/nfold))
+    fig = plt.figure(figsize=(20,15))
+    plt.bar(depth_tests,avg_scores,tick_label=depth_tests, label="DT Validation Error vs Depth Limit")
+    plt.xlabel("Depth Limit")
+    plt.ylabel("Validation Error")
+    plt.legend()#plt.legend(loc='upper left')
+    plt.show()
     ### ========== TODO : END ========== ###
 
 
