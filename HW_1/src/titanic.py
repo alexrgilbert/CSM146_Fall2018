@@ -313,6 +313,12 @@ def main():
     # part c: evaluate training error of Decision Tree classifier
     # use criterion of "entropy" for Information gain
     print('Classifying using Decision Tree...')
+    clfDT = DecisionTreeClassifier(criterion='entropy')
+    clfDT.fit(X, y)
+    y_predDT = clfDT.predict(X)        # take the classifier and run it on the training data
+    train_errorDT = 1 - metrics.accuracy_score(y, y_predDT, normalize=True)
+    print('\t-- training error: %.3f' % train_errorDT)
+
 
     ### ========== TODO : END ========== ###
 
