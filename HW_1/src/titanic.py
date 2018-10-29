@@ -291,30 +291,30 @@ def main():
 
     #========================================
     # part a: plot histograms of each feature
-    #print('Plotting...')
-    #for i in range(d) :
-    #    plot_histogram(X[:,i], y, Xname=Xnames[i], yname=yname)
+    print('Plotting...')
+    for i in range(d) :
+       plot_histogram(X[:,i], y, Xname=Xnames[i], yname=yname)
 
 
     #========================================
     # train Majority Vote classifier on data
-    # print('Classifying using Majority Vote...')
-    # clfMV = MajorityVoteClassifier() # create MajorityVote classifier, which includes all model parameters
-    # clfMV.fit(X, y)                  # fit training data using the classifier
-    # y_predMV = clfMV.predict(X)        # take the classifier and run it on the training data
-    # train_errorMV = 1 - metrics.accuracy_score(y, y_predMV, normalize=True)
-    # print('\t-- training error: %.3f' % train_errorMV)
+    print('Classifying using Majority Vote...')
+    clfMV = MajorityVoteClassifier() # create MajorityVote classifier, which includes all model parameters
+    clfMV.fit(X, y)                  # fit training data using the classifier
+    y_predMV = clfMV.predict(X)        # take the classifier and run it on the training data
+    train_errorMV = 1 - metrics.accuracy_score(y, y_predMV, normalize=True)
+    print('\t-- training error: %.3f' % train_errorMV)
 
 
 
     ### ========== TODO : START ========== ###
     # part b: evaluate training error of Random classifier
-    # print('Classifying using Random...')
-    # clfRand = RandomClassifier() # create MajorityVote classifier, which includes all model parameters
-    # clfRand.fit(X, y)                  # fit training data using the classifier
-    # y_predRand = clfRand.predict(X)        # take the classifier and run it on the training data
-    # train_errorRand = 1 - metrics.accuracy_score(y, y_predRand, normalize=True)
-    # print('\t-- training error: %.3f' % train_errorRand)
+    print('Classifying using Random...')
+    clfRand = RandomClassifier() # create MajorityVote classifier, which includes all model parameters
+    clfRand.fit(X, y)                  # fit training data using the classifier
+    y_predRand = clfRand.predict(X)        # take the classifier and run it on the training data
+    train_errorRand = 1 - metrics.accuracy_score(y, y_predRand, normalize=True)
+    print('\t-- training error: %.3f' % train_errorRand)
 
     ### ========== TODO : END ========== ###
 
@@ -323,12 +323,12 @@ def main():
     ### ========== TODO : START ========== ###
     # part c: evaluate training error of Decision Tree classifier
     # use criterion of "entropy" for Information gain
-    # print('Classifying using Decision Tree...')
-    # clfDT = DecisionTreeClassifier(criterion='entropy')
-    # clfDT.fit(X, y)
-    # y_predDT = clfDT.predict(X)        # take the classifier and run it on the training data
-    # train_errorDT = 1 - metrics.accuracy_score(y, y_predDT, normalize=True)
-    # print('\t-- training error: %.3f' % train_errorDT)
+    print('Classifying using Decision Tree...')
+    clfDT = DecisionTreeClassifier(criterion='entropy')
+    clfDT.fit(X, y)
+    y_predDT = clfDT.predict(X)        # take the classifier and run it on the training data
+    train_errorDT = 1 - metrics.accuracy_score(y, y_predDT, normalize=True)
+    print('\t-- training error: %.3f' % train_errorDT)
 
 
     ### ========== TODO : END ========== ###
@@ -352,49 +352,49 @@ def main():
     ### ========== TODO : START ========== ###
     # part d: evaluate training error of k-Nearest Neighbors classifier
     # use k = 3, 5, 7 for n_neighbors
-    # print('Classifying using 3 k-Nearest Neighbors...')
-    # clfKNN3 = KNeighborsClassifier(n_neighbors=3)
-    # clfKNN3.fit(X, y)
-    # y_predKNN3 = clfKNN3.predict(X)        # take the classifier and run it on the training data
-    # train_errorKNN3 = 1 - metrics.accuracy_score(y, y_predKNN3, normalize=True)
-    # print('\t-- training error: %.3f' % train_errorKNN3)
-    #
-    # print('Classifying using 5 k-Nearest Neighbors...')
-    # clfKNN5 = KNeighborsClassifier(n_neighbors=5)
-    # clfKNN5.fit(X, y)
-    # y_predKNN5 = clfKNN5.predict(X)        # take the classifier and run it on the training data
-    # train_errorKNN5 = 1 - metrics.accuracy_score(y, y_predKNN5, normalize=True)
-    # print('\t-- training error: %.3f' % train_errorKNN5)
-    #
-    # print('Classifying using 7 k-Nearest Neighbors...')
-    # clfKNN7 = KNeighborsClassifier(n_neighbors=7)
-    # clfKNN7.fit(X, y)
-    # y_predKNN7 = clfKNN7.predict(X)        # take the classifier and run it on the training data
-    # train_errorKNN7 = 1 - metrics.accuracy_score(y, y_predKNN7, normalize=True)
-    # print('\t-- training error: %.3f' % train_errorKNN7)
+    print('Classifying using 3 k-Nearest Neighbors...')
+    clfKNN3 = KNeighborsClassifier(n_neighbors=3)
+    clfKNN3.fit(X, y)
+    y_predKNN3 = clfKNN3.predict(X)        # take the classifier and run it on the training data
+    train_errorKNN3 = 1 - metrics.accuracy_score(y, y_predKNN3, normalize=True)
+    print('\t-- training error: %.3f' % train_errorKNN3)
+
+    print('Classifying using 5 k-Nearest Neighbors...')
+    clfKNN5 = KNeighborsClassifier(n_neighbors=5)
+    clfKNN5.fit(X, y)
+    y_predKNN5 = clfKNN5.predict(X)        # take the classifier and run it on the training data
+    train_errorKNN5 = 1 - metrics.accuracy_score(y, y_predKNN5, normalize=True)
+    print('\t-- training error: %.3f' % train_errorKNN5)
+
+    print('Classifying using 7 k-Nearest Neighbors...')
+    clfKNN7 = KNeighborsClassifier(n_neighbors=7)
+    clfKNN7.fit(X, y)
+    y_predKNN7 = clfKNN7.predict(X)        # take the classifier and run it on the training data
+    train_errorKNN7 = 1 - metrics.accuracy_score(y, y_predKNN7, normalize=True)
+    print('\t-- training error: %.3f' % train_errorKNN7)
     ### ========== TODO : END ========== ###
 
 
 
     ### ========== TODO : START ========== ###
     # part e: use cross-validation to compute average training and test error of classifiers
-    # print('Investigating various classifiers...')
-    #
-    # clfMV_TTSplit = MajorityVoteClassifier()
-    # (avg_trainError_MV,avg_testError_MV) = error(clfMV_TTSplit, X, y, ntrials=100, test_size=0.2)
-    # print('MajorityVote: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_MV, avg_testError_MV))
-    #
-    # clfRand_TTSplit = RandomClassifier()
-    # (avg_trainError_Rand,avg_testError_Rand) = error(clfRand_TTSplit, X, y, ntrials=100, test_size=0.2)
-    # print('Random: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_Rand, avg_testError_Rand))
-    #
-    # clfDT_TTSplit = DecisionTreeClassifier(criterion='entropy')
-    # (avg_trainError_DT,avg_testError_DT) = error(clfDT_TTSplit, X, y, ntrials=100, test_size=0.2)
-    # print('DecisionTree: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_DT, avg_testError_DT))
-    #
-    # clfKNN5_TTSplit = KNeighborsClassifier(n_neighbors=5)
-    # (avg_trainError_KNN5,avg_testError_KNN5) = error(clfKNN5_TTSplit, X, y, ntrials=100, test_size=0.2)
-    # print('K-Nearest: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_KNN5, avg_testError_KNN5))
+    print('Investigating various classifiers...')
+
+    clfMV_TTSplit = MajorityVoteClassifier()
+    (avg_trainError_MV,avg_testError_MV) = error(clfMV_TTSplit, X, y, ntrials=100, test_size=0.2)
+    print('MajorityVote: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_MV, avg_testError_MV))
+
+    clfRand_TTSplit = RandomClassifier()
+    (avg_trainError_Rand,avg_testError_Rand) = error(clfRand_TTSplit, X, y, ntrials=100, test_size=0.2)
+    print('Random: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_Rand, avg_testError_Rand))
+
+    clfDT_TTSplit = DecisionTreeClassifier(criterion='entropy')
+    (avg_trainError_DT,avg_testError_DT) = error(clfDT_TTSplit, X, y, ntrials=100, test_size=0.2)
+    print('DecisionTree: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_DT, avg_testError_DT))
+
+    clfKNN5_TTSplit = KNeighborsClassifier(n_neighbors=5)
+    (avg_trainError_KNN5,avg_testError_KNN5) = error(clfKNN5_TTSplit, X, y, ntrials=100, test_size=0.2)
+    print('K-Nearest: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_KNN5, avg_testError_KNN5))
 
     ### ========== TODO : END ========== ###
 
@@ -411,14 +411,14 @@ def main():
         clfKNNk = KNeighborsClassifier(n_neighbors=k)
         k_tests.append(k)
         avg_k_validationErrors.append(1-(np.sum(cross_val_score(clfKNNk,X,y,scoring='accuracy',cv=nfold))/nfold))
-    # fig = plt.figure(figsize=(20,15))
-    # plt.plot(k_tests,avg_k_validationErrors,color='blue', marker='o', linestyle='dashed', label="KNN Validation Error vs K")
-    # plt.grid(linewidth=.5)
-    # plt.xticks(k_tests,k_tests)
-    # plt.xlabel("# of Nearest Neighbors")
-    # plt.ylabel("Validation Error") #plt.legend(loc='upper left')
-    # plt.legend()
-    # plt.show()
+    fig = plt.figure(figsize=(20,15))
+    plt.plot(k_tests,avg_k_validationErrors,color='blue', marker='o', linestyle='dashed', label="KNN Validation Error vs K")
+    plt.grid(linewidth=.5)
+    plt.xticks(k_tests,k_tests)
+    plt.xlabel("# of Nearest Neighbors")
+    plt.ylabel("Validation Error") #plt.legend(loc='upper left')
+    plt.legend()
+    plt.show()
     ### ========== TODO : END ========== ###
 
 
@@ -435,14 +435,14 @@ def main():
         clfDTd = DecisionTreeClassifier(criterion='entropy',max_depth=d)
         depth_tests.append(d)
         avg_depth_validationErrors.append(1-(np.sum(cross_val_score(clfDTd,X,y,scoring='accuracy',cv=nfold))/nfold))
-    # fig = plt.figure(figsize=(20,15))
-    # plt.plot(depth_tests,avg_depth_validationErrors,color='blue', marker='o', linestyle='dashed', label="DT Validation Error vs Depth Limit")
-    # plt.grid(linewidth=.5)
-    # plt.xticks(depth_tests,depth_tests)
-    # plt.xlabel("Depth Limit")
-    # plt.ylabel("Validation Error")
-    # plt.legend()#plt.legend(loc='upper left')
-    # plt.show()
+    fig = plt.figure(figsize=(20,15))
+    plt.plot(depth_tests,avg_depth_validationErrors,color='blue', marker='o', linestyle='dashed', label="DT Validation Error vs Depth Limit")
+    plt.grid(linewidth=.5)
+    plt.xticks(depth_tests,depth_tests)
+    plt.xlabel("Depth Limit")
+    plt.ylabel("Validation Error")
+    plt.legend()#plt.legend(loc='upper left')
+    plt.show()
     ### ========== TODO : END ========== ###
 
 
