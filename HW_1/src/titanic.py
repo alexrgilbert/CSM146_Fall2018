@@ -245,10 +245,8 @@ def error(clf, X, y, ntrials=100, test_size=0.2, train_size=1.0):
     ### ========== TODO : START ========== ###
     # compute cross-validation error over ntrials
     # hint: use train_test_split (be careful of the parameters)
-
     avg_trainError = 0; avg_testError = 0;
     for trial in range(ntrials):
-
         X_train_whole, X_test, y_train_whole, y_test = train_test_split(X, y, test_size=0.2, random_state=trial)
         if (train_size == 1.0):
             X_train_part = X_train_whole
@@ -256,8 +254,8 @@ def error(clf, X, y, ntrials=100, test_size=0.2, train_size=1.0):
         else:
             X_train_part, X_train_rest, y_train_part, y_train_rest = train_test_split(X_train_whole, y_train_whole, train_size=train_size, random_state=trial)
         clf.fit(X_train_part, y_train_part)
-        y_pred_train = clf.predict(X_train_whole)
-        avg_trainError = avg_trainError + ((1 - metrics.accuracy_score(y_train_whole, y_pred_train, normalize=True))/ntrials)
+        y_pred_train = clf.predict(X_train_part)
+        avg_trainError = avg_trainError + ((1 - metrics.accuracy_score(y_train_part, y_pred_train, normalize=True))/ntrials)
         y_pred_test = clf.predict(X_test)
         avg_testError = avg_testError + ((1 - metrics.accuracy_score(y_test, y_pred_test, normalize=True))/ntrials)
         train_error = avg_trainError
@@ -300,23 +298,23 @@ def main():
 
     #========================================
     # train Majority Vote classifier on data
-    print('Classifying using Majority Vote...')
-    clfMV = MajorityVoteClassifier() # create MajorityVote classifier, which includes all model parameters
-    clfMV.fit(X, y)                  # fit training data using the classifier
-    y_predMV = clfMV.predict(X)        # take the classifier and run it on the training data
-    train_errorMV = 1 - metrics.accuracy_score(y, y_predMV, normalize=True)
-    print('\t-- training error: %.3f' % train_errorMV)
+    # print('Classifying using Majority Vote...')
+    # clfMV = MajorityVoteClassifier() # create MajorityVote classifier, which includes all model parameters
+    # clfMV.fit(X, y)                  # fit training data using the classifier
+    # y_predMV = clfMV.predict(X)        # take the classifier and run it on the training data
+    # train_errorMV = 1 - metrics.accuracy_score(y, y_predMV, normalize=True)
+    # print('\t-- training error: %.3f' % train_errorMV)
 
 
 
     ### ========== TODO : START ========== ###
     # part b: evaluate training error of Random classifier
-    print('Classifying using Random...')
-    clfRand = RandomClassifier() # create MajorityVote classifier, which includes all model parameters
-    clfRand.fit(X, y)                  # fit training data using the classifier
-    y_predRand = clfRand.predict(X)        # take the classifier and run it on the training data
-    train_errorRand = 1 - metrics.accuracy_score(y, y_predRand, normalize=True)
-    print('\t-- training error: %.3f' % train_errorRand)
+    # print('Classifying using Random...')
+    # clfRand = RandomClassifier() # create MajorityVote classifier, which includes all model parameters
+    # clfRand.fit(X, y)                  # fit training data using the classifier
+    # y_predRand = clfRand.predict(X)        # take the classifier and run it on the training data
+    # train_errorRand = 1 - metrics.accuracy_score(y, y_predRand, normalize=True)
+    # print('\t-- training error: %.3f' % train_errorRand)
 
     ### ========== TODO : END ========== ###
 
@@ -325,12 +323,12 @@ def main():
     ### ========== TODO : START ========== ###
     # part c: evaluate training error of Decision Tree classifier
     # use criterion of "entropy" for Information gain
-    print('Classifying using Decision Tree...')
-    clfDT = DecisionTreeClassifier(criterion='entropy')
-    clfDT.fit(X, y)
-    y_predDT = clfDT.predict(X)        # take the classifier and run it on the training data
-    train_errorDT = 1 - metrics.accuracy_score(y, y_predDT, normalize=True)
-    print('\t-- training error: %.3f' % train_errorDT)
+    # print('Classifying using Decision Tree...')
+    # clfDT = DecisionTreeClassifier(criterion='entropy')
+    # clfDT.fit(X, y)
+    # y_predDT = clfDT.predict(X)        # take the classifier and run it on the training data
+    # train_errorDT = 1 - metrics.accuracy_score(y, y_predDT, normalize=True)
+    # print('\t-- training error: %.3f' % train_errorDT)
 
 
     ### ========== TODO : END ========== ###
@@ -354,49 +352,49 @@ def main():
     ### ========== TODO : START ========== ###
     # part d: evaluate training error of k-Nearest Neighbors classifier
     # use k = 3, 5, 7 for n_neighbors
-    print('Classifying using 3 k-Nearest Neighbors...')
-    clfKNN3 = KNeighborsClassifier(n_neighbors=3)
-    clfKNN3.fit(X, y)
-    y_predKNN3 = clfKNN3.predict(X)        # take the classifier and run it on the training data
-    train_errorKNN3 = 1 - metrics.accuracy_score(y, y_predKNN3, normalize=True)
-    print('\t-- training error: %.3f' % train_errorKNN3)
-
-    print('Classifying using 5 k-Nearest Neighbors...')
-    clfKNN5 = KNeighborsClassifier(n_neighbors=5)
-    clfKNN5.fit(X, y)
-    y_predKNN5 = clfKNN5.predict(X)        # take the classifier and run it on the training data
-    train_errorKNN5 = 1 - metrics.accuracy_score(y, y_predKNN5, normalize=True)
-    print('\t-- training error: %.3f' % train_errorKNN5)
-
-    print('Classifying using 7 k-Nearest Neighbors...')
-    clfKNN7 = KNeighborsClassifier(n_neighbors=7)
-    clfKNN7.fit(X, y)
-    y_predKNN7 = clfKNN7.predict(X)        # take the classifier and run it on the training data
-    train_errorKNN7 = 1 - metrics.accuracy_score(y, y_predKNN7, normalize=True)
-    print('\t-- training error: %.3f' % train_errorKNN7)
+    # print('Classifying using 3 k-Nearest Neighbors...')
+    # clfKNN3 = KNeighborsClassifier(n_neighbors=3)
+    # clfKNN3.fit(X, y)
+    # y_predKNN3 = clfKNN3.predict(X)        # take the classifier and run it on the training data
+    # train_errorKNN3 = 1 - metrics.accuracy_score(y, y_predKNN3, normalize=True)
+    # print('\t-- training error: %.3f' % train_errorKNN3)
+    #
+    # print('Classifying using 5 k-Nearest Neighbors...')
+    # clfKNN5 = KNeighborsClassifier(n_neighbors=5)
+    # clfKNN5.fit(X, y)
+    # y_predKNN5 = clfKNN5.predict(X)        # take the classifier and run it on the training data
+    # train_errorKNN5 = 1 - metrics.accuracy_score(y, y_predKNN5, normalize=True)
+    # print('\t-- training error: %.3f' % train_errorKNN5)
+    #
+    # print('Classifying using 7 k-Nearest Neighbors...')
+    # clfKNN7 = KNeighborsClassifier(n_neighbors=7)
+    # clfKNN7.fit(X, y)
+    # y_predKNN7 = clfKNN7.predict(X)        # take the classifier and run it on the training data
+    # train_errorKNN7 = 1 - metrics.accuracy_score(y, y_predKNN7, normalize=True)
+    # print('\t-- training error: %.3f' % train_errorKNN7)
     ### ========== TODO : END ========== ###
 
 
 
     ### ========== TODO : START ========== ###
     # part e: use cross-validation to compute average training and test error of classifiers
-    print('Investigating various classifiers...')
-
-    clfMV_TTSplit = MajorityVoteClassifier()
-    (avg_trainError_MV,avg_testError_MV) = error(clfMV_TTSplit, X, y, ntrials=100, test_size=0.2)
-    print('MajorityVote: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_MV, avg_testError_MV))
-
-    clfRand_TTSplit = RandomClassifier()
-    (avg_trainError_Rand,avg_testError_Rand) = error(clfRand_TTSplit, X, y, ntrials=100, test_size=0.2)
-    print('Random: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_Rand, avg_testError_Rand))
-
-    clfDT_TTSplit = DecisionTreeClassifier(criterion='entropy')
-    (avg_trainError_DT,avg_testError_DT) = error(clfDT_TTSplit, X, y, ntrials=100, test_size=0.2)
-    print('DecisionTree: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_DT, avg_testError_DT))
-
-    clfKNN5_TTSplit = KNeighborsClassifier(n_neighbors=5)
-    (avg_trainError_KNN5,avg_testError_KNN5) = error(clfKNN5_TTSplit, X, y, ntrials=100, test_size=0.2)
-    print('K-Nearest: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_KNN5, avg_testError_KNN5))
+    # print('Investigating various classifiers...')
+    #
+    # clfMV_TTSplit = MajorityVoteClassifier()
+    # (avg_trainError_MV,avg_testError_MV) = error(clfMV_TTSplit, X, y, ntrials=100, test_size=0.2)
+    # print('MajorityVote: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_MV, avg_testError_MV))
+    #
+    # clfRand_TTSplit = RandomClassifier()
+    # (avg_trainError_Rand,avg_testError_Rand) = error(clfRand_TTSplit, X, y, ntrials=100, test_size=0.2)
+    # print('Random: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_Rand, avg_testError_Rand))
+    #
+    # clfDT_TTSplit = DecisionTreeClassifier(criterion='entropy')
+    # (avg_trainError_DT,avg_testError_DT) = error(clfDT_TTSplit, X, y, ntrials=100, test_size=0.2)
+    # print('DecisionTree: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_DT, avg_testError_DT))
+    #
+    # clfKNN5_TTSplit = KNeighborsClassifier(n_neighbors=5)
+    # (avg_trainError_KNN5,avg_testError_KNN5) = error(clfKNN5_TTSplit, X, y, ntrials=100, test_size=0.2)
+    # print('K-Nearest: -- training error: %.3f\t-- testing error: %.3f' % (avg_trainError_KNN5, avg_testError_KNN5))
 
     ### ========== TODO : END ========== ###
 
@@ -413,13 +411,14 @@ def main():
         clfKNNk = KNeighborsClassifier(n_neighbors=k)
         k_tests.append(k)
         avg_k_validationErrors.append(1-(np.sum(cross_val_score(clfKNNk,X,y,scoring='accuracy',cv=nfold))/nfold))
-    fig = plt.figure(figsize=(20,15))
-    plt.plot(k_tests,avg_k_validationErrors,color='blue', marker='o', linestyle='dashed', label="KNN Validation Error vs K")
-    plt.xticks(k_tests,k_tests)
-    plt.xlabel("# of Nearest Neighbors")
-    plt.ylabel("Validation Error") #plt.legend(loc='upper left')
-    plt.legend()
-    plt.show()
+    # fig = plt.figure(figsize=(20,15))
+    # plt.plot(k_tests,avg_k_validationErrors,color='blue', marker='o', linestyle='dashed', label="KNN Validation Error vs K")
+    # plt.grid(linewidth=.5)
+    # plt.xticks(k_tests,k_tests)
+    # plt.xlabel("# of Nearest Neighbors")
+    # plt.ylabel("Validation Error") #plt.legend(loc='upper left')
+    # plt.legend()
+    # plt.show()
     ### ========== TODO : END ========== ###
 
 
@@ -436,13 +435,14 @@ def main():
         clfDTd = DecisionTreeClassifier(criterion='entropy',max_depth=d)
         depth_tests.append(d)
         avg_depth_validationErrors.append(1-(np.sum(cross_val_score(clfDTd,X,y,scoring='accuracy',cv=nfold))/nfold))
-    fig = plt.figure(figsize=(20,15))
-    plt.plot(depth_tests,avg_depth_validationErrors,color='blue', marker='o', linestyle='dashed', label="DT Validation Error vs Depth Limit")
-    plt.xticks(depth_tests,depth_tests)
-    plt.xlabel("Depth Limit")
-    plt.ylabel("Validation Error")
-    plt.legend()#plt.legend(loc='upper left')
-    plt.show()
+    # fig = plt.figure(figsize=(20,15))
+    # plt.plot(depth_tests,avg_depth_validationErrors,color='blue', marker='o', linestyle='dashed', label="DT Validation Error vs Depth Limit")
+    # plt.grid(linewidth=.5)
+    # plt.xticks(depth_tests,depth_tests)
+    # plt.xlabel("Depth Limit")
+    # plt.ylabel("Validation Error")
+    # plt.legend()#plt.legend(loc='upper left')
+    # plt.show()
     ### ========== TODO : END ========== ###
 
 
@@ -452,9 +452,7 @@ def main():
     print('Investigating training set sizes...')
 
 
-    #best_depth_val, best_depth_idx = min((best_depth_val, best_depth_idx) for (best_depth_idx, best_depth_val) in enumerate(avg_depth_validationErrors))
     best_depth = depth_tests[np.argmin(avg_depth_validationErrors)]#[best_depth_idx]#
-    #best_k_val, best_k_idx = min((best_k_val, best_k_idx) for (best_k_idx, best_k_val) in enumerate(avg_k_validationErrors))
     best_k = k_tests[np.argmin(avg_k_validationErrors)]#[best_k_idx]#
 
     train_fractions = []
@@ -463,17 +461,18 @@ def main():
     avg_KNNbest_TTSplit_trainErrors = []
     avg_KNNbest_TTSplit_testErrors = []
     for train_fraction_int in range(1,10,1):
+
         train_fraction = float(train_fraction_int)/10
-        train_fractions.append(train_fractions)
+        train_fractions.append(train_fraction)
 
         clfDT_TTSplit = DecisionTreeClassifier(criterion='entropy',max_depth=best_depth)
-        (avg_DT_TTSplit_trainError,avg_DT_TTSplit_testError) = error(clfDT_TTSplit, X, y, ntrials=100, test_size=0.2,train_size=train_fraction)
+        (avg_DT_TTSplit_trainError,avg_DT_TTSplit_testError) = error(clfDT_TTSplit, X, y, ntrials=100, test_size=0.1,train_size=train_fraction)
         avg_DT_TTSplit_trainErrors.append(avg_DT_TTSplit_trainError)
         avg_DT_TTSplit_testErrors.append(avg_DT_TTSplit_testError)
 
 
         clfKNNbest_TTSplit = KNeighborsClassifier(n_neighbors=best_k)
-        (avg_KNNbest_TTSplit_trainError,avg_KNNbest_TTSplit_testError) = error(clfKNNbest_TTSplit, X, y, ntrials=100, test_size=0.2,train_size=train_fraction)
+        (avg_KNNbest_TTSplit_trainError,avg_KNNbest_TTSplit_testError) = error(clfKNNbest_TTSplit, X, y, ntrials=100, test_size=0.1,train_size=train_fraction)
         avg_KNNbest_TTSplit_trainErrors.append(avg_KNNbest_TTSplit_trainError)
         avg_KNNbest_TTSplit_testErrors.append(avg_KNNbest_TTSplit_testError)
     fig = plt.figure(figsize=(20,15))
@@ -485,6 +484,7 @@ def main():
     plt.plot(train_fractions,avg_DT_TTSplit_testErrors,color='green', marker='.', linestyle='dashed', label=DT_Test_Label)
     plt.plot(train_fractions,avg_KNNbest_TTSplit_trainErrors,color='red', marker='x', linestyle='dashed', label=KNN_Train_Label)
     plt.plot(train_fractions,avg_KNNbest_TTSplit_testErrors,color='cyan', marker='+', linestyle='dashed', label=KNN_Test_Label)
+    plt.grid(linewidth=.5)
     plt.xticks(train_fractions,train_fractions)
     plt.xlabel("Fraction of Training Data Used")
     plt.ylabel("Training/Test Error")
