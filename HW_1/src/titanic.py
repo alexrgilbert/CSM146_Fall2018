@@ -224,9 +224,7 @@ def plot_histogram(X, y, Xname, yname, show = True) :
 
     return data, bins, align, labels
 
-
-
-def error(clf, X, y, ntrials=100, test_size=0.2) :
+def error(clf, X, y, ntrials=100, test_size=0.2, train_size=1.0):
     """
     Computes the classifier error over a random split of the data,
     averaged over ntrials runs.
@@ -251,14 +249,19 @@ def error(clf, X, y, ntrials=100, test_size=0.2) :
     avg_trainError = 0; avg_testError = 0;
     for trial in range(ntrials):
 
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=trial)
-
-        clf.fit(X_train, y_train)
-        y_pred_train = clf.predict(X_train)
-        avg_trainError = avg_trainError + ((1 - metrics.accuracy_score(y_train, y_pred_train, normalize=True))/ntrials)
+        X_train_whole, X_test, y_train_whole, y_test = train_test_split(X, y, test_size=0.2, random_state=trial)
+        if (train_size == 1.0):
+            X_train_part = X_train_whole
+            y_train_part = y_train_whole
+        else:
+            X_train_part, X_train_rest, y_train_part, y_train_rest = train_test_split(X_train_whole, y_train_whole, train_size=train_size, random_state=trial)
+        clf.fit(X_train_part, y_train_part)
+        y_pred_train = clf.predict(X_train_whole)
+        avg_trainError = avg_trainError + ((1 - metrics.accuracy_score(y_train_whole, y_pred_train, normalize=True))/ntrials)
         y_pred_test = clf.predict(X_test)
         avg_testError = avg_testError + ((1 - metrics.accuracy_score(y_test, y_pred_test, normalize=True))/ntrials)
-    return(avg_trainError,avg_testError)
+        train_error = avg_trainError
+        test_error = avg_testError
 
     ### ========== TODO : END ========== ###
 
@@ -405,13 +408,14 @@ def main():
     nfold = 100
     max_k = 50
     k_tests = []
-    avg_scores = []
+    avg_k_validationErrors = []
     for k in range(1,50,2):
         clfKNNk = KNeighborsClassifier(n_neighbors=k)
         k_tests.append(k)
-        avg_scores.append(1-(np.sum(cross_val_score(clfKNNk,X,y,scoring='accuracy',cv=nfold))/nfold))
+        avg_k_validationErrors.append(1-(np.sum(cross_val_score(clfKNNk,X,y,scoring='accuracy',cv=nfold))/nfold))
     fig = plt.figure(figsize=(20,15))
-    plt.bar(k_tests,avg_scores,tick_label=k_tests, Label="KNN Validation Error vs K"))
+    plt.plot(k_tests,avg_k_validationErrors,color='blue', marker='o', linestyle='dashed', label="KNN Validation Error vs K")
+    plt.xticks(k_tests,k_tests)
     plt.xlabel("# of Nearest Neighbors")
     plt.ylabel("Validation Error") #plt.legend(loc='upper left')
     plt.legend()
@@ -427,13 +431,14 @@ def main():
     nfold = 100
     max_depth = 20
     depth_tests = []
-    avg_scores = []
+    avg_depth_validationErrors = []
     for d in range(1,(max_depth+1)):
         clfDTd = DecisionTreeClassifier(criterion='entropy',max_depth=d)
         depth_tests.append(d)
-        avg_scores.append(1-(np.sum(cross_val_score(clfDTd,X,y,scoring='accuracy',cv=nfold))/nfold))
+        avg_depth_validationErrors.append(1-(np.sum(cross_val_score(clfDTd,X,y,scoring='accuracy',cv=nfold))/nfold))
     fig = plt.figure(figsize=(20,15))
-    plt.bar(depth_tests,avg_scores,tick_label=depth_tests, label="DT Validation Error vs Depth Limit")
+    plt.plot(depth_tests,avg_depth_validationErrors,color='blue', marker='o', linestyle='dashed', label="DT Validation Error vs Depth Limit")
+    plt.xticks(depth_tests,depth_tests)
     plt.xlabel("Depth Limit")
     plt.ylabel("Validation Error")
     plt.legend()#plt.legend(loc='upper left')
@@ -446,6 +451,45 @@ def main():
     # part h: investigate Decision Tree and k-Nearest Neighbors classifier with various training set sizes
     print('Investigating training set sizes...')
 
+
+    #best_depth_val, best_depth_idx = min((best_depth_val, best_depth_idx) for (best_depth_idx, best_depth_val) in enumerate(avg_depth_validationErrors))
+    best_depth = depth_tests[np.argmin(avg_depth_validationErrors)]#[best_depth_idx]#
+    #best_k_val, best_k_idx = min((best_k_val, best_k_idx) for (best_k_idx, best_k_val) in enumerate(avg_k_validationErrors))
+    best_k = k_tests[np.argmin(avg_k_validationErrors)]#[best_k_idx]#
+
+    train_fractions = []
+    avg_DT_TTSplit_trainErrors = []
+    avg_DT_TTSplit_testErrors = []
+    avg_KNNbest_TTSplit_trainErrors = []
+    avg_KNNbest_TTSplit_testErrors = []
+    for train_fraction_int in range(1,10,1):
+        train_fraction = float(train_fraction_int)/10
+        train_fractions.append(train_fractions)
+
+        clfDT_TTSplit = DecisionTreeClassifier(criterion='entropy',max_depth=best_depth)
+        (avg_DT_TTSplit_trainError,avg_DT_TTSplit_testError) = error(clfDT_TTSplit, X, y, ntrials=100, test_size=0.2,train_size=train_fraction)
+        avg_DT_TTSplit_trainErrors.append(avg_DT_TTSplit_trainError)
+        avg_DT_TTSplit_testErrors.append(avg_DT_TTSplit_testError)
+
+
+        clfKNNbest_TTSplit = KNeighborsClassifier(n_neighbors=best_k)
+        (avg_KNNbest_TTSplit_trainError,avg_KNNbest_TTSplit_testError) = error(clfKNNbest_TTSplit, X, y, ntrials=100, test_size=0.2,train_size=train_fraction)
+        avg_KNNbest_TTSplit_trainErrors.append(avg_KNNbest_TTSplit_trainError)
+        avg_KNNbest_TTSplit_testErrors.append(avg_KNNbest_TTSplit_testError)
+    fig = plt.figure(figsize=(20,15))
+    DT_Train_Label = ("Depth Tree (max depth = %d) Training Error" %best_depth)
+    DT_Test_Label = ("Depth Tree (max depth = %d) Test Error" %best_depth)
+    KNN_Train_Label = ("KNN (k = %d) Training Error" %best_k)
+    KNN_Test_Label = ("Knn (k = %d) Test Error" %best_k)
+    plt.plot(train_fractions,avg_DT_TTSplit_trainErrors,color='blue', marker='o', linestyle='dashed', label=DT_Train_Label)
+    plt.plot(train_fractions,avg_DT_TTSplit_testErrors,color='green', marker='.', linestyle='dashed', label=DT_Test_Label)
+    plt.plot(train_fractions,avg_KNNbest_TTSplit_trainErrors,color='red', marker='x', linestyle='dashed', label=KNN_Train_Label)
+    plt.plot(train_fractions,avg_KNNbest_TTSplit_testErrors,color='cyan', marker='+', linestyle='dashed', label=KNN_Test_Label)
+    plt.xticks(train_fractions,train_fractions)
+    plt.xlabel("Fraction of Training Data Used")
+    plt.ylabel("Training/Test Error")
+    plt.legend()#plt.legend(loc='upper left')
+    plt.show()
     ### ========== TODO : END ========== ###
 
 
