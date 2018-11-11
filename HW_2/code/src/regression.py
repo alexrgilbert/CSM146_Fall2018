@@ -112,7 +112,8 @@ class PolynomialRegression() :
         ### ========== TODO : START ========== ###
         # part b: modify to create matrix for simple linear model
         # part g: modify to create matrix for polynomial model
-        Phi = X
+        Phi = np.ones((n,(d+1)))
+        Phi[:,1:] = X
         m = self.m_
 
         ### ========== TODO : END ========== ###
@@ -318,9 +319,9 @@ def main() :
     ### ========== TODO : START ========== ###
     # part a: main code for visualizations
     print('Visualizing data...')
-    plot_data(train_data.X, train_data.y, 0, c='g')
-    plot_data(test_data.X, test_data.y, 1, c='b')
-    plt.show()
+    #plot_data(train_data.X, train_data.y, 0, c='g')
+    #plot_data(test_data.X, test_data.y, 1, c='b')
+    #plt.show()
     ### ========== TODO : END ========== ###
 
 
@@ -328,7 +329,7 @@ def main() :
     ### ========== TODO : START ========== ###
     # parts b-f: main code for linear regression
     print('Investigating linear regression...')
-    
+
     ### ========== TODO : END ========== ###
 
 
