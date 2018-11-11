@@ -267,6 +267,7 @@ class PolynomialRegression() :
         """
         ### ========== TODO : START ========== ###
         # part d: compute J(theta)
+        cost = np.sum((y-self.predict(X))**2)
         ### ========== TODO : END ========== ###
         return cost
 
