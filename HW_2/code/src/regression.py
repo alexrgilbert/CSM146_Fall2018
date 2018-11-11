@@ -246,7 +246,7 @@ class PolynomialRegression() :
 
         ### ========== TODO : START ========== ###
         # part c: predict y
-        y = None
+        y = np.dot(X,self.coef_)
         ### ========== TODO : END ========== ###
 
         return y
@@ -267,7 +267,6 @@ class PolynomialRegression() :
         """
         ### ========== TODO : START ========== ###
         # part d: compute J(theta)
-        cost = 0
         ### ========== TODO : END ========== ###
         return cost
 
