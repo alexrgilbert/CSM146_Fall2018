@@ -3,11 +3,15 @@
 # python libraries
 import os
 
+import time
 # numpy libraries
 import numpy as np
 
 # matplotlib libraries
 import matplotlib.pyplot as plt
+
+
+#from timeit import Timer
 
 ######################################################################
 # classes
@@ -50,7 +54,7 @@ class Data :
         self.X = data[:,:-1]
         self.y = data[:,-1]
 
-    def plot(self, plot, **kwargs) :
+    def plot(self, plot=1, **kwargs) :
         """Plot data."""
 
         if 'c' not in kwargs :
@@ -69,7 +73,7 @@ def load_data(filename) :
     data.load(filename)
     return data
 
-def plot_data(X, y, plot, **kwargs) :
+def plot_data(X, y, plot=1, **kwargs) :
     data = Data(X, y)
     data.plot(plot, **kwargs)
 
@@ -112,12 +116,18 @@ class PolynomialRegression() :
         ### ========== TODO : START ========== ###
         # part b: modify to create matrix for simple linear model
         # part g: modify to create matrix for polynomial model
-        Phi = np.ones((n,(d+1)))
-        Phi[:,1:] = X
+        # Phi = np.ones((n,(d+1)))
+        # Phi[:,1:] = X
+        # m = self.m_
+
         m = self.m_
+        Phi = np.ones((n,(m+1)))
+
+        for x in range(0,m):
+            Phi[:,(x+1)] = np.power(X[:,0],(x+1))
 
         ### ========== TODO : END ========== ###
-
+        #print(Phi)
         return Phi
 
 
@@ -163,7 +173,7 @@ class PolynomialRegression() :
             # change the default eta in the function signature to 'eta=None'
             # and update the line below to your learning rate function
             if eta_input is None :
-                eta = None # change this line
+                eta = 1/(1+t) # change this line
             else :
                 eta = eta_input
             ### ========== TODO : END ========== ###
@@ -172,7 +182,7 @@ class PolynomialRegression() :
             # part d: update theta (self.coef_) using one step of GD
             # hint: you can write simultaneously update all theta using vector math
 
-            self.coef_ = self.coef_ - (2*eta*np.dot(np.transpose(X),np.dot(X,self.coef_)))
+            self.coef_ = self.coef_ - (2*eta*np.dot(np.transpose(X),(np.dot(X,self.coef_)-y)))
             # track error
             # hint: you cannot use self.predict(...) to make the predictions
             y_pred = np.dot(X,self.coef_)# change this line
@@ -195,11 +205,11 @@ class PolynomialRegression() :
                 plt.plot([t+1], [cost], 'bo')
                 plt.suptitle('iteration: %d, cost: %f' % (t+1, cost))
                 plt.draw()
-                plt.pause(0.05) # pause for 0.05 sec
+                plt.pause(0.0005) # pause for 0.05 sec
 
         print(('number of iterations: %d' % (t+1)))
 
-        return self
+        return (eta, (t+1), self.cost((np.reshape(X[:,1], (n,1))),y), self.coef_)
 
 
     def fit(self, X, y, l2regularize = None ) :
@@ -224,9 +234,9 @@ class PolynomialRegression() :
         # part e: implement closed-form solution
         # hint: use np.dot(...) and np.linalg.pinv(...)
         #       be sure to update self.coef_ with your solution
-
+        self.coef_ = np.dot((np.dot(np.linalg.pinv(np.dot(np.transpose(X),X)),np.transpose(X))),y)
         ### ========== TODO : END ========== ###
-
+        return self#(self.cost((np.reshape(X[:,1], (X.shape[0],1))),y), self.coef_)
 
     def predict(self, X) :
         """
@@ -288,15 +298,16 @@ class PolynomialRegression() :
         """
         ### ========== TODO : START ========== ###
         # part h: compute RMSE
-        error = 0
+        cost = self.cost(X,y)
+        error = np.sqrt(cost/X.shape[0])
         ### ========== TODO : END ========== ###
         return error
 
 
     def plot_regression(self, xmin=0, xmax=1, n=50, **kwargs) :
         """Plot regression line."""
-        if 'color' not in kwargs :
-            kwargs['color'] = 'r'
+        if 'c' not in kwargs :
+            kwargs['c'] = 'r'
         if 'linestyle' not in kwargs :
             kwargs['linestyle'] = '-'
 
@@ -331,13 +342,54 @@ def main() :
     # parts b-f: main code for linear regression
     print('Investigating linear regression...')
 
+    train_data = load_data('regression_train.csv')
+    #model = PolynomialRegression()
+    # etas = [(.0001),(.001),(.01),.0407]
+    # eta_comp = []
+    #for eta in etas:
+    #    model = PolynomialRegression()
+    #    eta_comp.append(model.fit_GD(train_data.X, train_data.y, eta,
+    #                0, 10000, verbose=False))
+
+    #print(eta_comp)
+    modelGD = PolynomialRegression()
+    start_time = time.time()
+    GDRes = modelGD.fit_GD(train_data.X, train_data.y, .01, 0, 10000, verbose=False)
+    GD_time = time.time() - start_time
+    print(GDRes[2],GDRes[3])
+    print(GD_time)
+    # modelClosed = PolynomialRegression()
+    # start_time = time.time()
+    # ClosedRes = modelClosed.fit(train_data.X, train_data.y)
+    # Closed_time = time.time() - start_time
+    # print(ClosedRes[0],ClosedRes[1])
+    # print(Closed_time)
     ### ========== TODO : END ========== ###
 
-
+#BOUNCES A LOT THEN GET'S GOOD AGAIN
+    modelGDf = PolynomialRegression()
+    start_time = time.time()
+    GDResf = modelGDf.fit_GD(train_data.X, train_data.y, None, 0, 10000, verbose=False)
+    GD_timef = time.time() - start_time
+    print(GDResf[2],GDResf[3])
+    print(GD_timef)
 
     ### ========== TODO : START ========== ###
     # parts g-i: main code for polynomial regression
     print('Investigating polynomial regression...')
+
+    error = np.zeros((11,2))
+    for m in range(0,11):
+        model = PolynomialRegression(m)
+        model.fit(train_data.X,train_data.y)
+        train_error = model.rms_error(train_data.X,train_data.y)
+        test_error = model.rms_error(test_data.X,test_data.y)
+        error[m,0] = train_error
+        error[m,1] = test_error
+
+    plot_data(np.linspace(0,1,11),error[:,0],0)
+    plot_data(np.linspace(0,1,11),error[:,1],1,c='g')
+
 
     ### ========== TODO : END ========== ###
 
