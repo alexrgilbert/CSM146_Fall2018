@@ -127,7 +127,8 @@ class PolynomialRegression() :
             Phi[:,(x+1)] = np.power(X[:,0],(x+1))
 
         ### ========== TODO : END ========== ###
-        #print(Phi)
+        print(X)
+        print(Phi)
         return Phi
 
 
@@ -210,7 +211,7 @@ class PolynomialRegression() :
         print(('number of iterations: %d' % (t+1)))
 
         return (eta, (t+1), self.cost((np.reshape(X[:,1], (n,1))),y), self.coef_)
-
+        #return (eta, (t+1), self.cost((np.reshape(X[:,1], (n,1))),y))
 
     def fit(self, X, y, l2regularize = None ) :
         """
@@ -236,6 +237,7 @@ class PolynomialRegression() :
         #       be sure to update self.coef_ with your solution
         self.coef_ = np.dot((np.dot(np.linalg.pinv(np.dot(np.transpose(X),X)),np.transpose(X))),y)
         ### ========== TODO : END ========== ###
+        print(self.generate_polynomial_features(X))
         return self#(self.cost((np.reshape(X[:,1], (X.shape[0],1))),y), self.coef_)
 
     def predict(self, X) :
@@ -280,6 +282,7 @@ class PolynomialRegression() :
         # part d: compute J(theta)
         cost = np.sum((y-self.predict(X))**2)
         ### ========== TODO : END ========== ###
+        print(cost)
         return cost
 
 
@@ -331,39 +334,44 @@ def main() :
     ### ========== TODO : START ========== ###
     # part a: main code for visualizations
     print('Visualizing data...')
-    #plot_data(train_data.X, train_data.y, 0, c='g')
-    #plot_data(test_data.X, test_data.y, 1, c='b')
-    #plt.show()
-    ### ========== TODO : END ========== ###
-
-
-
-    ### ========== TODO : START ========== ###
+    plot_data(train_data.X, train_data.y, 0, c='g')
+    plot_data(test_data.X, test_data.y, 1, c='b')
+    plt.show()
+#     ### ========== TODO : END ========== ###
+#
+#
+#
+#     ### ========== TODO : START ========== ###
     # parts b-f: main code for linear regression
     print('Investigating linear regression...')
 
-    train_data = load_data('regression_train.csv')
-    #model = PolynomialRegression()
-    # etas = [(.0001),(.001),(.01),.0407]
-    # eta_comp = []
-    #for eta in etas:
-    #    model = PolynomialRegression()
-    #    eta_comp.append(model.fit_GD(train_data.X, train_data.y, eta,
-    #                0, 10000, verbose=False))
+    # train_data = load_data('regression_train.csv')
+    # model = PolynomialRegression()
+    etas = [(.0001),(.001),(.01),.0407]
+    eta_comp = []
+    # for eta in etas:
+    #    modelEta = PolynomialRegression()
+    #    eta_comp.append(modelEta.fit_GD(train_data.X, train_data.y, eta, 0, 10000, verbose=False))
 
     #print(eta_comp)
+    # print("TESTESTESTESTESTEST")
+    # modelGen = PolynomialRegression()
+    # modelGen.generate_polynomial_features(train_data.X)
+
     modelGD = PolynomialRegression()
     start_time = time.time()
     GDRes = modelGD.fit_GD(train_data.X, train_data.y, .01, 0, 10000, verbose=False)
     GD_time = time.time() - start_time
+    print('GD')
     print(GDRes[2],GDRes[3])
     print(GD_time)
-    # modelClosed = PolynomialRegression()
-    # start_time = time.time()
-    # ClosedRes = modelClosed.fit(train_data.X, train_data.y)
-    # Closed_time = time.time() - start_time
-    # print(ClosedRes[0],ClosedRes[1])
-    # print(Closed_time)
+    modelClosed = PolynomialRegression()
+    start_time = time.time()
+    ClosedRes = modelClosed.fit(train_data.X, train_data.y)
+    Closed_time = time.time() - start_time
+    print('Closed')
+    #print(ClosedRes[0],ClosedRes[1])
+    #print(Closed_time)
     ### ========== TODO : END ========== ###
 
 #BOUNCES A LOT THEN GET'S GOOD AGAIN
@@ -371,7 +379,8 @@ def main() :
     start_time = time.time()
     GDResf = modelGDf.fit_GD(train_data.X, train_data.y, None, 0, 10000, verbose=False)
     GD_timef = time.time() - start_time
-    print(GDResf[2],GDResf[3])
+    print('Function')
+    print(GDResf[1],GDResf[2],GDResf[3])
     print(GD_timef)
 
     ### ========== TODO : START ========== ###
@@ -393,8 +402,14 @@ def main() :
 
     ### ========== TODO : END ========== ###
 
+    modelGen = PolynomialRegression(4)
+    modelGen.generate_polynomial_features(train_data.X)
+
+    # modelGen.coef_ = np.zeros(2)
+    # modelGen.cost(train_data.X, train_data.y)
+    # print(modelGen.fit_GD(train_data.X, train_data.y, .01, 0, 10000, verbose=False))
 
     print("Done!")
-
+    print(eta_comp)
 if __name__ == "__main__" :
     main()
