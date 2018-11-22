@@ -111,7 +111,12 @@ def extract_feature_vectors(infile, word_list):
     with open(infile, 'rU') as fid :
         ### ========== TODO : START ========== ###
         # part 1b: process each line to populate feature_matrix
-
+        line_num = 0
+        for line in fid:
+            words = extract_words(line)
+            for w in words:
+                feature_matrix[line_num][word_list[w]] = 1
+            line_num = line_num + 1
         ### ========== TODO : END ========== ###
 
     return feature_matrix
