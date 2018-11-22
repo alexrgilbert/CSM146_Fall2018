@@ -74,7 +74,13 @@ def extract_dictionary(infile):
     with open(infile, 'rU') as fid :
         ### ========== TODO : START ========== ###
         # part 1a: process each line to populate word_list
-        pass
+        index = 0
+        for line in f:
+            words = extract_words(line)
+            for w in words:
+                if w not in word_list:
+                    word_list[w] = index
+                    index = index + 1
         ### ========== TODO : END ========== ###
 
     return word_list
