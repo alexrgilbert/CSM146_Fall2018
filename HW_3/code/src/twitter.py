@@ -252,7 +252,10 @@ def main() :
     metric_list = ["accuracy", "f1_score", "auroc"]
     ### ========== TODO : START ========== ###
     # part 1: split data into training (training + cross-validation) and testing set
-
+    X_train = X[0:559]
+    y_train = y[0:559]
+    X_test = X[560:629]
+    y_test = y[560:629]
     # part 2: create stratified folds (5-fold CV)
 
     # part 2: for each metric, select optimal hyperparameter for linear-kernel SVM using CV
