@@ -75,7 +75,7 @@ def extract_dictionary(infile):
         ### ========== TODO : START ========== ###
         # part 1a: process each line to populate word_list
         index = 0
-        for line in f:
+        for line in fid:
             words = extract_words(line)
             for w in words:
                 if w not in word_list:
@@ -111,7 +111,7 @@ def extract_feature_vectors(infile, word_list):
     with open(infile, 'rU') as fid :
         ### ========== TODO : START ========== ###
         # part 1b: process each line to populate feature_matrix
-        pass
+
         ### ========== TODO : END ========== ###
 
     return feature_matrix
