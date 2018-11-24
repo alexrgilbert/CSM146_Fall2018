@@ -6,12 +6,13 @@ Description : Twitter
 from string import punctuation
 
 import numpy as np
-
+import random
 # !!! MAKE SURE TO USE SVC.decision_function(X), NOT SVC.predict(X) !!!
 # (this makes ``continuous-valued'' predictions)
 from sklearn.svm import SVC
 from sklearn.cross_validation import StratifiedKFold
 from sklearn import metrics
+
 
 ######################################################################
 # functions -- input/output
@@ -148,6 +149,7 @@ def performance(y_true, y_pred, metric="accuracy"):
 
     ### ========== TODO : START ========== ###
     # part 2a: compute classifier performance
+
     return 0
     ### ========== TODO : END ========== ###
 
@@ -252,6 +254,9 @@ def main() :
     metric_list = ["accuracy", "f1_score", "auroc"]
     ### ========== TODO : START ========== ###
     # part 1: split data into training (training + cross-validation) and testing set
+    z = list(zip(X,y))
+    random.shuffle(z)
+    X, y = zip(*z)
     X_train = X[0:559]
     y_train = y[0:559]
     X_test = X[560:629]
