@@ -184,7 +184,18 @@ def cv_performance(clf, X, y, kf, metric="accuracy"):
 
     ### ========== TODO : START ========== ###
     # part 2b: compute average cross-validation performance
-    return 0
+    folds = len(kf)
+    avg_score = 0;
+
+    for train_index, test_index in kf:
+        X_train, X_test = X[train_index], X[test_index]
+        y_train, y_test = y[train_index], y[test_index]
+        clf.fit(X_train,y_train)
+        y_pred = clf.decision_function(X_test)
+        score = performance(y_test, y_pred, metric)
+        avg_score = avg_score + (score/folds)
+
+    return avg_score
     ### ========== TODO : END ========== ###
 
 
