@@ -11,6 +11,7 @@ import random
 # (this makes ``continuous-valued'' predictions)
 from sklearn.svm import SVC
 from sklearn.cross_validation import StratifiedKFold
+from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 from sklearn import metrics
 
 
@@ -149,8 +150,13 @@ def performance(y_true, y_pred, metric="accuracy"):
 
     ### ========== TODO : START ========== ###
     # part 2a: compute classifier performance
-
-    return 0
+    if(metric == 'acuracy'):
+        score = accuracy_score(y_true,y_label)
+    elif(metric == 'f1-score'):
+        score = f1_score(y_true,y_label)
+    elif(metric == 'auroc'):
+        score = roc_auc_score(y_true, y_pred)
+    return score
     ### ========== TODO : END ========== ###
 
 
@@ -261,6 +267,7 @@ def main() :
     y_train = y[0:559]
     X_test = X[560:629]
     y_test = y[560:629]
+    print (y_test)
     # part 2: create stratified folds (5-fold CV)
 
     # part 2: for each metric, select optimal hyperparameter for linear-kernel SVM using CV
