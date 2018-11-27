@@ -224,7 +224,16 @@ def select_param_linear(X, y, kf, metric="accuracy"):
 
     ### ========== TODO : START ========== ###
     # part 2: select optimal hyperparameter using cross-validation
-    return 1.0
+    best_C = 0;
+    best_score = 0;
+    for c in C_range:
+        clf = svm.SVC(C=c,kernel='linear')
+        kCV_score = self.cv_performance(clf, X, y, kf, metric)
+        if (kCV_score >= best_score):
+            best_C = c
+            best_score = kCV_score
+
+    return best_C
     ### ========== TODO : END ========== ###
 
 
