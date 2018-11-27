@@ -150,12 +150,16 @@ def performance(y_true, y_pred, metric="accuracy"):
 
     ### ========== TODO : START ========== ###
     # part 2a: compute classifier performance
-    if(metric == 'acuracy'):
+    score = 0
+    if(metric == 'accuracy'):
         score = accuracy_score(y_true,y_label)
-    elif(metric == 'f1-score'):
+        print('FUNCTION: performance | METRIC: accuracy | SCORE: ' + str(score))
+    elif(metric == 'f1_score'):
         score = f1_score(y_true,y_label)
+        print('FUNCTION: performance | METRIC: f1_score | SCORE: ' + str(score))
     elif(metric == 'auroc'):
         score = roc_auc_score(y_true, y_pred)
+        print('FUNCTION: performance | METRIC: roc_auc_score | SCORE: ' + str(score))
     return score
     ### ========== TODO : END ========== ###
 
@@ -186,14 +190,24 @@ def cv_performance(clf, X, y, kf, metric="accuracy"):
     # part 2b: compute average cross-validation performance
     folds = len(kf)
     avg_score = 0;
-
+    fold_count = 1
     for train_index, test_index in kf:
-        X_train, X_test = X[train_index], X[test_index]
-        y_train, y_test = y[train_index], y[test_index]
+        X_train = []
+        y_train = []
+        X_test = []
+        y_test = []
+        for i in train_index:
+            X_train.append(X[i])
+            y_train.append(y[i])
+        for j in test_index:
+            X_test.append(X[j])
+            y_test.append(y[j])
         clf.fit(X_train,y_train)
         y_pred = clf.decision_function(X_test)
         score = performance(y_test, y_pred, metric)
         avg_score = avg_score + (score/folds)
+        print('FUNCTION: cv_performance | METRIC: ' + str(metric) + ' | FOLD: ' + str(fold_count) + ' | SCORE: ' + str(score))
+        fold_count = fold_count + 1
 
     return avg_score
     ### ========== TODO : END ========== ###
@@ -224,16 +238,17 @@ def select_param_linear(X, y, kf, metric="accuracy"):
 
     ### ========== TODO : START ========== ###
     # part 2: select optimal hyperparameter using cross-validation
-    best_C = 0;
+    best_C = C_range[0];
     best_score = 0;
     for c in C_range:
-        clf = svm.SVC(C=c,kernel='linear')
-        kCV_score = self.cv_performance(clf, X, y, kf, metric)
+        clf = SVC(C=c,kernel='linear')
+        kCV_score = cv_performance(clf, X, y, kf, metric)
         if (kCV_score >= best_score):
             best_C = c
             best_score = kCV_score
+        print('FUNCTION: select_param_linear | METRIC: ' + str(metric) + ' | C: ' + str(c) + ' | SCORE: ' + str(kCV_score))
 
-    return best_C
+    return (best_C,best_score)
     ### ========== TODO : END ========== ###
 
 
@@ -289,9 +304,19 @@ def main() :
     y_test = y[560:629]
     print (y_test)
     # part 2: create stratified folds (5-fold CV)
-
+    skf = StratifiedKFold(y_train, n_folds=5, shuffle=True, random_state=None)
     # part 2: for each metric, select optimal hyperparameter for linear-kernel SVM using CV
+    C_list = [];
+    score_list =[];
+    for metric in metric_list:
+        (best_C,best_score) = select_param_linear(X_train, y_train, skf, metric)
+        C_list.append(best_C)
+        score_list.append(best_score)
+        print('FUNCTION: main | METRIC: ' + str(metric) + ' | BEST_C: ' + str(best_C) + ' | BEST_SCORE: ' + str(best_score))
 
+    print(metric_list)
+    print(C_list)
+    print(score_list)
     # part 3: train linear-kernel SVMs with selected hyperparameters
 
     # part 3: report performance on test data
