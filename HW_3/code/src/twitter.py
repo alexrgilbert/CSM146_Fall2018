@@ -153,13 +153,13 @@ def performance(y_true, y_pred, metric="accuracy"):
     score = 0
     if(metric == 'accuracy'):
         score = accuracy_score(y_true,y_label)
-        print('FUNCTION: performance | METRIC: accuracy | SCORE: ' + str(score))
+        #print('FUNCTION: performance | METRIC: accuracy | SCORE: ' + str(score))
     elif(metric == 'f1_score'):
         score = f1_score(y_true,y_label)
-        print('FUNCTION: performance | METRIC: f1_score | SCORE: ' + str(score))
+        #print('FUNCTION: performance | METRIC: f1_score | SCORE: ' + str(score))
     elif(metric == 'auroc'):
         score = roc_auc_score(y_true, y_pred)
-        print('FUNCTION: performance | METRIC: roc_auc_score | SCORE: ' + str(score))
+        #print('FUNCTION: performance | METRIC: roc_auc_score | SCORE: ' + str(score))
     return score
     ### ========== TODO : END ========== ###
 
@@ -206,7 +206,7 @@ def cv_performance(clf, X, y, kf, metric="accuracy"):
         y_pred = clf.decision_function(X_test)
         score = performance(y_test, y_pred, metric)
         avg_score = avg_score + (score/folds)
-        print('FUNCTION: cv_performance | METRIC: ' + str(metric) + ' | FOLD: ' + str(fold_count) + ' | SCORE: ' + str(score))
+        #print('FUNCTION: cv_performance | METRIC: ' + str(metric) + ' | FOLD: ' + str(fold_count) + ' | SCORE: ' + str(score))
         fold_count = fold_count + 1
 
     return avg_score
@@ -243,9 +243,26 @@ def select_param_linear(X, y, kf, metric="accuracy"):
     for c in C_range:
         clf = SVC(C=c,kernel='linear')
         kCV_score = cv_performance(clf, X, y, kf, metric)
-        if (kCV_score >= best_score):
-            best_C = c
-            best_score = kCV_score
+        if (not isinstance(best_score, list)):
+            if (kCV_score > best_score):
+                best_C = c
+                best_score = kCV_score
+            elif (kCV_score == best_score):
+                best_C_holder = best_C
+                best_C = []
+                best_C.append(best_C_holder)
+                best_C.append(c)
+                best_score_holder = best_score
+                best_score = []
+                best_score.append(best_score_holder)
+                best_score.append(kCV_score)
+        else:
+            if (kCV_score > best_score[-1]):
+                best_C = c
+                best_score = kCV_score
+            elif (kCV_score == best_score[-1]):
+                best_C.append(c)
+                best_score.append(kCV_score)
         print('FUNCTION: select_param_linear | METRIC: ' + str(metric) + ' | C: ' + str(c) + ' | SCORE: ' + str(kCV_score))
 
     return (best_C,best_score)
@@ -274,8 +291,9 @@ def performance_test(clf, X, y, metric="accuracy"):
 
     ### ========== TODO : START ========== ###
     # part 3: return performance on test data by first computing predictions and then calling performance
-
-    score = 0
+    y_pred = clf.decision_function(X)
+    score = performance(y, y_pred, metric)
+    print('FUNCTION: performance_test | METRIC: ' + str(metric) + ' | SCORE: ' + str(score))
     return score
     ### ========== TODO : END ========== ###
 
@@ -295,9 +313,9 @@ def main() :
     metric_list = ["accuracy", "f1_score", "auroc"]
     ### ========== TODO : START ========== ###
     # part 1: split data into training (training + cross-validation) and testing set
-    z = list(zip(X,y))
-    random.shuffle(z)
-    X, y = zip(*z)
+    #z = list(zip(X,y))
+    #random.shuffle(z)
+    #X, y = zip(*z)
     X_train = X[0:559]
     y_train = y[0:559]
     X_test = X[560:629]
@@ -312,15 +330,28 @@ def main() :
         (best_C,best_score) = select_param_linear(X_train, y_train, skf, metric)
         C_list.append(best_C)
         score_list.append(best_score)
-        print('FUNCTION: main | METRIC: ' + str(metric) + ' | BEST_C: ' + str(best_C) + ' | BEST_SCORE: ' + str(best_score))
+        print('FUNCTION: main (train) | METRIC: ' + str(metric) + ' | BEST_C: ' + str(best_C) + ' | BEST_SCORE: ' + str(best_score))
 
     print(metric_list)
     print(C_list)
     print(score_list)
     # part 3: train linear-kernel SVMs with selected hyperparameters
-
-    # part 3: report performance on test data
-
+    for i in range(len(metric_list)):
+        if (isinstance(C_list[i], list)):
+            for j in range(len(C_list[i])):
+                c = (C_list[i][j])
+                print(c)
+                clf = SVC(C=c,kernel='linear')
+                clf.fit(X_train,y_train)
+    # part 3: report performance on test data (with multiple C's)
+                score = performance_test(clf, X_test, y_test, metric_list[i])
+                print('FUNCTION: main (test) | METRIC: ' + str(metric_list[i]) + ' | C: ' + str(C_list[i][j]) + ' | SCORE: ' + str(score))
+        else:
+            clf = SVC(C=C_list[i],kernel='linear')
+            clf.fit(X_train,y_train)
+    # part 3: report performance on test data (with unique C's)
+            score = performance_test(clf, X_test, y_test, metric_list[i])
+            print('FUNCTION: main (test) | METRIC: ' + str(metric_list[i]) + ' | C: ' + str(C_list[i]) + ' | SCORE: ' + str(score))
     ### ========== TODO : END ========== ###
 
 
